@@ -1,0 +1,101 @@
+﻿// ProductComponent.razor
+@page "/products"
+@using BizzUIBlazor.Components.Models
+@inject BizzUIBlazor.Components.Services.ProductService productService
+@inject IJSRuntime JSRuntime
+
+<h3>Product List</h3>
+
+@if (products == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products.Data)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                    <td>
+                        <button @onclick="() => EditProduct(product)">Edit</button>
+                        <button @onclick="() => DeleteProduct(product.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Add/Edit Product</h3>
+    <p>
+        <label>Name: </label>
+        <input @bind="newProduct.Name" />
+    </p>
+    <p>
+        <label>Price: </label>
+        <input @bind="newProduct.Price" />
+    </p>
+    <button @onclick="SaveProduct">Save</button>
+}
+
+@code {
+    private ApiResponse<List<Product>> products;
+    private BizzUIBlazor.Components.Models.Product newProduct = new Product();
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await productService.GetProducts();
+    }
+    private async Task ShowAlert(string msg)
+    {
+        await JSRuntime.InvokeVoidAsync("showAlert", msg);
+    }
+    private async Task SaveProduct()
+    {
+        Console.WriteLine("Saving..");
+        await ShowAlert("Saving..");
+        if (newProduct.Id == 0)
+        {
+            // Add new product
+           var addedProduct = await productService.AddProduct(newProduct);           
+            products.Data.Add(addedProduct);
+        }
+        else
+        {
+            // Update existing product
+            var updatedProduct = await productService.UpdateProduct(newProduct);
+            var index = products.Data.FindIndex(p => p.Id == updatedProduct.Id);
+            products.Data[index] = updatedProduct;
+        }
+
+        // Clear the input fields
+        newProduct = new Product();
+        await ShowAlert("Saved");
+    }
+
+    private void EditProduct(Product product)
+    {
+        newProduct = product; // Set the current product for editing
+    }
+
+    private async Task DeleteProduct(int id)
+    {
+        var result = await productService.DeleteProduct(id);
+        if (result)
+        {
+            // Remove the product from the list if deletion is successful
+            products.Data.RemoveAll(p => p.Id == id);
+        }
+    }
+}

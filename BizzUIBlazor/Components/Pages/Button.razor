@@ -1,0 +1,84 @@
+﻿@page "/buttonclick"
+@using Microsoft.JSInterop
+
+<h3>DOM manipulation using C# code and Razor syntax</h3>
+
+<h3>1. Updating Element Content:</h3>
+
+<h3>@message</h3>
+
+<button @onclick="UpdateMessage">Update Message</button>
+
+
+<h3>1.Handling Events:</h3>
+
+<button @onclick="HandleButtonClick">Click me</button>
+
+<h3>3. Referencing HTML Elements:</h3>
+<p>You can use ref to reference HTML elements and manipulate them directly in the code</p>
+
+<button @ref="myButtonRef" @onclick="HandleButtonClick2">Click me</button>
+
+<h3>4. Conditional Rendering:</h3>
+
+@if (showElement)
+{
+    <p>Show this element conditionally</p>
+}
+
+<button @onclick="ToggleElement">Toggle Element</button>
+
+
+<h3>5. Interacting with JavaScript:</h3>
+
+<button @onclick="CallJavaScriptFunction">Call JavaScript Function</button>
+
+@code {
+
+    //Updating Element Content
+    private string message = "Initial Message";
+
+    private void UpdateMessage()
+    {
+        message = "Updated Message";
+    }
+
+// Handle button click event
+    private void HandleButtonClick()
+    {
+        Console.WriteLine("Button clicked!");
+        
+        // Handle button click event
+        // Perform DOM manipulation or other actions
+    }
+
+// Access and manipulate myButtonRef here
+     private ElementReference myButtonRef;
+
+    private void HandleButtonClick2()
+    {
+        // Access and manipulate myButtonRef here
+        myButtonRef.FocusAsync();
+    }
+
+//Show the element conditionally
+    private bool showElement = false;
+
+    private void ToggleElement()
+    {
+        showElement = !showElement;
+    }
+
+   //CallJavaScriptFunction
+    private void CallJavaScriptFunction()
+    {
+        // Call a JavaScript function using JSRuntime
+       // JSRuntime.InvokeVoidAsync("myJavaScriptFunction");
+    }
+
+
+}
+
+
+
+ 

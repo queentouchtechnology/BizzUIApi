@@ -1,0 +1,98 @@
+﻿@page "/add-org"
+@inject AuthService AuthService;
+
+
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@using Starterkit.Components;
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization;
+
+@inject OrganizationService Service
+@inject NavigationManager NavigationManager;
+@inject IJSRuntime JSRuntime;
+
+
+
+
+
+
+
+
+<AlertBox Message="@responseMessage" Type="danger" OnClose="ClearErrorMessage" />
+<CreateOrgComp isdatasubmit="@isSubmitting" OnValidSubmit="@CreateOrg"></CreateOrgComp>
+<OrganizationTable Organizations="@organizations" />
+
+
+
+
+@code {
+    private AlertBox alertBox;
+
+    private OrganizationModel neworg = new OrganizationModel();
+
+    private List<OrganizationModel> organizations = new List<OrganizationModel>();
+
+    private string CookieUsername;
+
+
+    private bool added = false;
+    private string responseMessage;
+    private bool isSubmitting = false;
+    private bool IsAuthenticated;
+    //  private string UserId;
+    // private string Username;
+
+    
+
+
+
+    private void ClearErrorMessage()
+    {
+        responseMessage = null;
+    }
+
+  
+
+    private async Task CreateOrg(OrganizationModel neworg)
+    {
+        try
+        {
+            // Set the loading flag to true before starting the submission
+            isSubmitting = true;
+
+            // Simulating a delay for demonstration purposes
+            await Task.Delay(500);
+            var response = await Service.SetOrg(neworg);
+            added = response.Status;
+
+            
+            responseMessage = response.RespText;
+            if (responseMessage == "OK")
+            {
+                alertBox.Type = "success";
+
+                // Set the error message and type to display in the alert
+                alertBox.Message = "Organization created successfully!";
+                organizations = await Service.GetOrganizationsAsync();            
+            }
+            // Reset the loading flag after the submission is complete
+            isSubmitting = false;
+
+            Console.WriteLine($"Status : {responseMessage}");
+        }
+        catch (Exception ex)
+        {
+            
+            responseMessage = $"Error: {ex.Message}";
+            // Set the alert type, e.g., "danger"
+            alertBox.Type = "danger";
+
+            // Set the error message and type to display in the alert
+            alertBox.Message = $"Error: {ex.Message}";
+
+            // Handle the exception (log, display an error message, etc.)
+            Console.WriteLine($"Error loading page: {ex.Message}");
+        }
+    }
+}

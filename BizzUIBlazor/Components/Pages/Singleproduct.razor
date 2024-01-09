@@ -1,0 +1,39 @@
+﻿@page "/product"
+@inject HttpClient httpClient
+@using System.Net.Http
+
+<h3>Call Product API from Blazor</h3>
+
+
+
+@if (product != null)
+{
+
+    <p>Product ID: @product.Id</p>
+    <p>Name: @product.Name</p>
+    <p>Price: @product.Price</p>
+}
+else
+{
+    <p>Product not found</p>
+}
+
+@code {
+    private Product product;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Replace "1" with the actual product ID you want to fetch
+        var productId = 1;
+
+        // Use the injected HttpClient to call the API
+        product = await httpClient.GetFromJsonAsync<Product>("products/get/1");//$"products/{productId}"
+    }
+
+    private class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+    }
+}

@@ -1,0 +1,31 @@
+﻿@page "/cc"
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@using Starterkit.Components;
+@inject EncryptionService EncryptionService
+
+<h3>LocalStorage Encryption/Decryption in Blazor</h3>
+
+<button @onclick="EncryptAndStore">Encrypt and Store</button>
+<button @onclick="RetrieveAndDecrypt">Retrieve and Decrypt</button>
+
+@code {
+    private string dataToStore = "Sensitive information";
+    private string encryptedData;
+    private string decryptedData;
+
+    private void EncryptAndStore()
+    {
+        encryptedData = EncryptionService.EncryptData(dataToStore);
+        // Store 'encryptedData' in local storage as needed
+        // ...
+    }
+
+    private void RetrieveAndDecrypt()
+    {
+        // Retrieve 'encryptedData' from local storage as needed
+        // ...
+        decryptedData = EncryptionService.DecryptData(encryptedData);
+        Console.WriteLine("Decrypted Data:", decryptedData);
+    }
+}

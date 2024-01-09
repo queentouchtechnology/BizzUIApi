@@ -1,0 +1,59 @@
+﻿@inherits ComponentBase
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+
+
+@if (obj != null && obj.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact Name</th>
+               
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in obj)
+            {
+                <tr>
+                    <td>@data.Id</td>
+                    <td>@data.Name</td>
+                    <td>@data.Email</td>
+                    <td>@data.ContactName</td>
+                  
+                    <td>
+                        <button class="btn btn-info" @onclick="() => EditUser(data.Id)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteUser(data.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No users available.</p>
+}
+
+@code {
+    [Parameter] public List<Admin> obj { get; set; }
+
+    private void EditUser(int userId)
+    {
+        // Navigate to the user edit page or perform edit action
+        // You can use navigation or show/hide components based on your application structure
+        // For simplicity, let's log to the console in this example
+        Console.WriteLine($"Edit user with ID: {userId}");
+    }
+
+    private void DeleteUser(int userId)
+    {
+        // Perform delete action (e.g., show confirmation modal)
+        // For simplicity, let's log to the console in this example
+        Console.WriteLine($"Delete user with ID: {userId}");
+    }
+}

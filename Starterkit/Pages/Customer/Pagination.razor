@@ -1,0 +1,73 @@
+﻿<!-- Pagination.razor -->
+
+
+
+
+
+<div style=" margin-top:10px; padding:50px;" class="row">
+
+    <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+        <span>Page @currentPage of @totalPages</span>
+    </div>
+
+    <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+
+        <div class="dataTables_paginate paging_simple_numbers" id="kt_table_users_paginate">
+
+            <ul class="pagination">
+                <li class="paginate_button page-item previous" id="kt_table_users_previous">
+                    <button disabled="@(currentPage == 1)" class="page-link" @onclick="LoadPrevious"><i class="previous"></i>Previous</button>
+
+                </li>
+
+
+
+                @for (int pageno = 1; pageno <= totalPages; pageno++)
+                {
+                    <li class="@(currentPage == pageno ? "paginate_button page-item active" : "paginate_button page-item")">
+                        <button class="page-link" disabled="@(currentPage == pageno)" @onclick="()=>PageChanged.InvokeAsync(pageno)">@pageno</button>
+                    </li>
+                }
+
+                <li class="paginate_button page-item next" id="kt_table_users_next">
+
+                    <button disabled="@(currentPage == totalPages)" class="page-link" @onclick="LoadNext"> Next <i class="next"></i></button>
+
+
+
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public int currentPage { get; set; }
+
+    [Parameter]
+    public int totalPages { get; set; }
+
+    [Parameter]
+    public EventCallback<int> PageChanged { get; set; }
+
+    private async Task LoadPrevious()
+    {
+        await PageChanged.InvokeAsync(currentPage - 1);
+    }
+
+    private async Task LoadNext()
+    {
+        await PageChanged.InvokeAsync(currentPage + 1);
+    }
+}

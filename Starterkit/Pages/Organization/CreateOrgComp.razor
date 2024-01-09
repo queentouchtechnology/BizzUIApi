@@ -1,0 +1,259 @@
+﻿@inherits ComponentBase
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+
+
+<div class="card card-flush py-4 mb-10">
+	<!--begin::Card header-->
+	<div class="card-header">
+		<div class="card-title">
+			<h2>Create Organization</h2>
+		</div>
+	</div>
+	<!--end::Card header-->
+	<!--begin::Card body-->
+	<div class="card-body pt-0">
+		<!--begin::Input group-->
+		<EditForm Model="@organization" OnValidSubmit="HandleValidSubmit">
+			<DataAnnotationsValidator />
+		<!--end::Input group-->
+		<!--begin::Input group-->
+		<div class="fv-row">
+			<!--begin::Label-->
+		
+			<!--End::Label-->
+			<!--begin::Row-->
+			<div class="row row-cols-1 row-cols-md-3 row-cols-lg-1 row-cols-xl-3 g-9" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button='true']">
+				<!--begin::Col-->
+				<div class="col">
+					<!--begin::Option-->
+					<div class="mb-10 fv-row">
+						<!--begin::Label-->
+						<label class="required form-label">Name</label>
+						<!--end::Label-->
+						<!--begin::Input-->
+							<input type="text" name="Name" class="form-control mb-2" @bind="organization.Name" placeholder="Organization Name" />
+						<!--end::Input-->
+						<!--begin::Description-->
+							
+
+							<div class="text-danger fs-7">
+								<ValidationMessage For="@(() => organization.Name)" />
+							</div>
+						<!--end::Description-->
+					</div>
+					<!--end::Option-->
+				</div>
+				<!--end::Col-->
+				<!--begin::Col-->
+				<div class="col">
+					<!--begin::Option-->
+					<div class="mb-10 fv-row">
+						<!--begin::Label-->
+						<label class="required form-label">Contact Name</label>
+						<!--end::Label-->
+						<!--begin::Input-->
+							<input type="text" name="contactname" class="form-control mb-2" @bind="organization.ContactName" placeholder="Contact Name" />
+						<!--end::Input-->
+						<!--begin::Description-->
+							
+
+							<div class="text-danger fs-7">
+								<ValidationMessage For="@(() => organization.ContactName)" />
+							</div>
+
+							
+						<!--end::Description-->
+					</div>
+					<!--end::Option-->
+				</div>
+				<!--end::Col-->
+				<!--begin::Col-->
+				<div class="col">
+					<!--begin::Option-->
+					<div class="mb-10 fv-row">
+						<!--begin::Label-->
+						<label class="required form-label">Email</label>
+						<!--end::Label-->
+						<!--begin::Input-->
+						<input type="text" name="email" class="form-control mb-2" @bind="organization.Email" placeholder="Business Email" />
+						<!--end::Input-->
+						<!--begin::Description-->
+								
+							<div class="text-danger fs-7">
+								<ValidationMessage For="@(() => organization.Email)" />
+							</div>
+						<!--end::Description-->
+					</div>
+					<!--end::Option-->
+				</div>
+				<!--end::Col-->
+			</div>
+			<!--end::Row-->
+		</div>
+
+		<div class="fv-row">
+			<!--begin::Label-->
+			<!--End::Label-->
+			<!--begin::Row-->
+			<div class="row row-cols-1 row-cols-md-3 row-cols-lg-1 row-cols-xl-3 g-9" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button='true']">
+				<!--begin::Col-->
+				<div class="col">
+					<!--begin::Option-->
+					<div class="mb-10 fv-row">
+						<!--begin::Label-->
+							<label class="required form-label">Website</label>
+						<!--end::Label-->
+						<!--begin::Input-->
+						<input type="text" name="price" class="form-control mb-2" placeholder="Website" @bind="organization.OrgWebsite" />
+						<!--end::Input-->
+						<!--begin::Description-->
+							<div class="text-muted fs-7">Set the OrgWebsite.</div>
+						<!--end::Description-->
+					</div>
+					<!--end::Option-->
+				</div>
+				<!--end::Col-->
+				<!--begin::Col-->
+				<div class="col">
+					<!--begin::Option-->
+					<div class="mb-10 fv-row">
+						<!--begin::Label-->
+							<label class="required form-label">Mobile</label>
+						<!--end::Label-->
+						<!--begin::Input-->
+							<input type="text" name="Mobile" class="form-control mb-2" placeholder="Mobile" @bind="organization.Mobile" />
+						<!--end::Input-->
+						<!--begin::Description-->
+							
+							<div class="text-danger fs-7">
+								<ValidationMessage For="@(() => organization.Mobile)" />
+							</div>
+						<!--end::Description-->
+					</div>
+					<!--end::Option-->
+				</div>
+				<!--end::Col-->
+				<!--begin::Col-->
+				<div class="col">
+					<!--begin::Option-->
+					<div class="mb-10 fv-row">
+						<!--begin::Label-->
+							<label class="required form-label">Address</label>
+						<!--end::Label-->
+						<!--begin::Input-->
+							<input type="text" name="Address" class="form-control mb-2" placeholder="Address" @bind="organization.Address" />
+						<!--end::Input-->
+						<!--begin::Description-->
+							<div class="text-muted fs-7">Set the Address.</div>
+						<!--end::Description-->
+					</div>
+					<!--end::Option-->
+				</div>
+				<!--end::Col-->
+			</div>
+			<!--end::Row-->
+		</div>
+		<!--end::Input group-->
+		
+		
+
+		<div class="d-flex justify-content-end">
+			<!--begin::Button-->
+			<a href="../../demo1/dist/apps/ecommerce/catalog/products.html" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
+			<!--end::Button-->
+			<!--begin::Button-->
+				<button type="submit" disabled="@isdatasubmit" id="kt_ecommerce_add_product_submit" class="btn btn-primary">
+
+
+					@if (isdatasubmit)
+        {
+						<span class="indicator-label">
+							Please wait...
+							<span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+						</span>
+						
+        }
+        else
+        {
+						<span class="indicator-label">Create Organization</span>
+        }
+    
+
+				
+				
+			</button>
+			<!--end::Button-->
+		</div>
+		</EditForm>
+
+	</div>
+	<!--end::Card header-->
+</div>
+
+<div style=" display:none;">
+<EditForm Model="@organization" OnValidSubmit="HandleValidSubmit">
+	<DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <InputText id="Name" @bind-Value="organization.Name" class="form-control" />
+        <ValidationMessage For="@(() => organization.Name)" />
+    </div>
+
+    <div class="form-group">
+        <label for="ContactName">Contact Name:</label>
+        <InputText id="ContactName" @bind-Value="organization.ContactName" class="form-control" />
+        <ValidationMessage For="@(() => organization.ContactName)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Email:</label>
+        <InputText id="Email" @bind-Value="organization.Email" class="form-control" />
+        <ValidationMessage For="@(() => organization.Email)" />
+    </div>
+
+   
+
+    <div class="form-group">
+        <label for="Website">Website:</label>
+        <InputText id="Website" @bind-Value="organization.OrgWebsite" class="form-control" />
+        <ValidationMessage For="@(() => organization.OrgWebsite)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Mobile">Mobile:</label>
+        <InputText id="Mobile" @bind-Value="organization.Mobile" class="form-control" />
+        <ValidationMessage For="@(() => organization.Mobile)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Address">Address:</label>
+        <InputText id="Address" @bind-Value="organization.Address" class="form-control" />
+        <ValidationMessage For="@(() => organization.Address)" />
+    </div>
+
+   
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+
+
+
+</EditForm>
+</div>
+
+@code {
+	[Parameter]   
+	public EventCallback<OrganizationModel> OnValidSubmit { get; set; }
+
+	[Parameter]
+	public bool isdatasubmit { get; set; }
+
+	private OrganizationModel organization = new OrganizationModel();
+
+    
+    private void HandleValidSubmit()
+    {
+        OnValidSubmit.InvokeAsync(organization);
+    }
+}

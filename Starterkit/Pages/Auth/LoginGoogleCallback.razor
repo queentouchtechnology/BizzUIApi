@@ -1,0 +1,72 @@
+﻿@page "/login-google"
+
+<h3>Processing Google Login...</h3>
+@using System.Security.Claims
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+@if (UserInfo != null)
+{
+    <div>
+        <p>Welcome, @UserInfo.UserName!</p>
+        <!-- Add other user information as needed -->
+        <button @onclick="Logout">Logout</button>
+    </div>
+}
+else
+{
+    <p>Failed to retrieve user information.</p>
+}
+
+
+@code {
+    private UserInfoModel UserInfo; // Assuming you have a class to represent user information
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            // Access the user's name claim
+            string userName = user.FindFirst(ClaimTypes.Name)?.Value;
+
+            // Access other claims as needed
+            // string userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
+
+            // Use the retrieved information
+            UserInfo = new UserInfoModel
+                {
+                    UserName = userName,
+                    // Add other properties as needed
+                };
+        }
+        else
+        {
+            // Extract user information as needed
+            UserInfo = new UserInfoModel
+                {
+                    UserName = user.Identity.Name,
+                    // Add other user information as needed
+                };
+
+            // Handle unauthenticated state
+        }
+
+       
+            Console.WriteLine(authenticationState.User.ToString());
+    }
+
+    private void Logout()
+    {
+        // Implement logout logic if needed
+        NavigationManager.NavigateTo("/");
+    }
+    public class UserInfoModel
+    {
+        public string UserName { get; set; }
+        // Add other properties as needed (e.g., email, profile picture, etc.)
+    }
+}

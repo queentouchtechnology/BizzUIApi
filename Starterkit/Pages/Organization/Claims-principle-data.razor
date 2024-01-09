@@ -1,0 +1,59 @@
+﻿@page "/claims-principle-data"
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@inject AuthenticationService CustomStateProvider
+<h1>ClaimsPrincipal Data</h1>
+
+<button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
+
+<p>@authMessage</p>
+<button @onclick="Logout">Logout</button>
+@if (claims.Count() > 0)
+{
+    <ul>
+        @foreach (var claim in claims)
+        {
+            <li>@claim.Type: @claim.Value</li>
+        }
+    </ul>
+}
+
+<p>@surname</p>
+
+@code {
+    private string? authMessage;
+    private string? surname;
+    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+
+    private async Task Logout()
+    {
+        // Perform logout logic here
+        // This might involve clearing authentication cookies, redirecting, etc.
+
+        // Example: Clear authentication state
+        await CustomStateProvider.SignOutAsync();
+
+        // Additional logout logic as needed
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+
+        var authState = await AuthenticationStateProvider
+            .GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            authMessage = $"{user.Identity.Name} is authenticated.";
+            claims = user.Claims;
+            surname = user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value;
+        }
+        else
+        {
+            authMessage = "The user is NOT authenticated.";
+        }
+    }
+}

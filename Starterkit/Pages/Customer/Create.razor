@@ -1,0 +1,84 @@
+﻿@page "/add-customer"
+
+
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@using Starterkit.Components;
+@inject CustomersService Service
+
+<h3>Add Customer</h3>
+
+@if (added)
+{
+    <p>Customer added successfully. Message: @responseMessage</p>
+}
+else
+{
+    <p>Failed to add customer. Message: @responseMessage</p>
+}
+
+    <form @onsubmit="AddCustomer">
+
+        <label for="Title">Title:</label>
+        <input type="text" id="Title" name="Title" @bind="newCustomer.Title" />
+
+    <label for="Title">FirstNameZ:</label>
+    <input type="text" id="FirstName" name="FirstName" @bind="newCustomer.FirstName" />
+    <label for="Title">Lastname:</label>
+    <input type="text" id="LastName" name="LastName" @bind="newCustomer.LastName" />
+
+        <!-- Email -->
+        <label for="Email">Email:</label>
+        <input type="email" id="Email" name="Email" @bind="newCustomer.Email" />
+
+        <!-- Mobile -->
+        <label for="Mobile">Mobile:</label>
+        <input type="text" id="Mobile" name="Mobile" @bind="newCustomer.Mobile" />
+
+    <label for="Mobile">Address 1:</label>
+    <input type="text" id="Address1" name="Address1" @bind="newCustomer.Address1" />
+    <label for="Mobile">Address 2:</label>
+    <input type="text" id="Address2" name="Address2" @bind="newCustomer.Address2" />
+    
+    <label for="Mobile">City:</label>
+    <input type="text" id="City" name="City" @bind="newCustomer.City" />
+    <label for="Mobile">State:</label>
+    <input type="text" id="State" name="State" @bind="newCustomer.State" />
+    <label for="Mobile">Country:</label>
+    <input type="text" id="Country" name="Country" @bind="newCustomer.Country" />
+
+    <label for="Mobile">Pincode:</label>
+    <input type="text" id="Pincode" name="Pincode" @bind="newCustomer.Pincode" />
+
+    <label for="Mobile">Location:</label>
+    <input type="text" id="Location" name="Location" @bind="newCustomer.Location" />
+    <label for="Mobile">AadharNo:</label>
+    <input type="text" id="AadharNo" name="AadharNo" @bind="newCustomer.AadharNo" />
+    <label for="Mobile">CompanyName:</label>
+    <input type="text" id="CompanyName" name="CompanyName" @bind="newCustomer.CompanyName" />
+    <label for="Mobile">GstNo:</label>
+    <input type="text" id="GstNo" name="GstNo" @bind="newCustomer.GstNo" />
+    <label for="Mobile">PanNo:</label>
+    <input type="text" id="PanNo" name="PanNo" @bind="newCustomer.PanNo" />
+    <label for="Mobile">RegistrationType:</label>
+    <input type="text" id="RegistrationType" name="RegistrationType" @bind="newCustomer.RegistrationType" />
+
+    
+
+        <button type="submit">Add Customer</button>
+    </form>
+
+
+@code {
+    private Customer newCustomer = new Customer();
+    private bool added = false;
+    private string responseMessage;
+
+    private async Task AddCustomer()
+    {
+        var response = await Service.AddCustomer(newCustomer);
+        added = response.Status;
+        responseMessage = response.RespText;
+        
+    }
+}

@@ -1,0 +1,112 @@
+﻿@page "/customer/update/{customerId:int}"
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@inject CustomersService Service;
+@inject NavigationManager Navigation;
+
+<h3>Edit Customer</h3>
+
+@if (customer == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    @* <form> *@
+    @*     <button type="button" @onclick="UpdateCustomer">Update Customer</button> *@
+    @* </form> *@
+    <form @onsubmit="UpdateCustomer">
+        <label for="Title">Title:</label>
+        <input type="text" id="Title" name="Title" @bind="customer.Title"/>
+
+        <label for="Title">FirstNameZ:</label>
+        <input type="text" id="FirstName" name="FirstName" @bind="customer.FirstName"/>
+        <label for="Title">Lastname:</label>
+        <input type="text" id="LastName" name="LastName" @bind="customer.LastName"/>
+
+        <!-- Email -->
+        <label for="Email">Email:</label>
+        <input type="email" id="Email" name="Email" @bind="customer.Email"/>
+
+        <!-- Mobile -->
+        <label for="Mobile">Mobile:</label>
+        <input type="text" id="Mobile" name="Mobile" @bind="customer.Mobile"/>
+
+        <label for="Mobile">Address 1:</label>
+        <input type="text" id="Address1" name="Address1" @bind="customer.Address1"/>
+        <label for="Mobile">Address 2:</label>
+        <input type="text" id="Address2" name="Address2" @bind="customer.Address2"/>
+
+        <label for="Mobile">City:</label>
+        <input type="text" id="City" name="City" @bind="customer.City"/>
+        <label for="Mobile">State:</label>
+        <input type="text" id="State" name="State" @bind="customer.State"/>
+        <label for="Mobile">Country:</label>
+        <input type="text" id="Country" name="Country" @bind="customer.Country"/>
+
+        <label for="Mobile">Pincode:</label>
+        <input type="text" id="Pincode" name="Pincode" @bind="customer.Pincode"/>
+
+        <label for="Mobile">Location:</label>
+        <input type="text" id="Location" name="Location" @bind="customer.Location"/>
+        <label for="Mobile">AadharNo:</label>
+        <input type="text" id="AadharNo" name="AadharNo" @bind="customer.AadharNo"/>
+        <label for="Mobile">CompanyName:</label>
+        <input type="text" id="CompanyName" name="CompanyName" @bind="customer.CompanyName"/>
+        <label for="Mobile">GstNo:</label>
+        <input type="text" id="GstNo" name="GstNo" @bind="customer.GstNo"/>
+        <label for="Mobile">PanNo:</label>
+        <input type="text" id="PanNo" name="PanNo" @bind="customer.PanNo"/>
+        <label for="Mobile">RegistrationType:</label>
+        <input type="text" id="RegistrationType" name="RegistrationType" @bind="customer.RegistrationType"/>
+
+        <button type="submit">Update Customer</button>
+    </form>
+}
+
+@code {
+    [Parameter] public int customerId { get; set; }
+
+    private GetResponse<Customer> res;
+
+    private Customer customer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCustomer();
+    }
+
+    private async Task LoadCustomer()
+    {
+        Console.WriteLine($"received customer id: {customerId}");
+        res = await Service.GetCustomerById(customerId);
+
+        if (res.Status)
+        {
+            Console.WriteLine($"Status : {res.Status}");
+            Console.WriteLine($"RespText : {res.RespText}");
+            Console.WriteLine($"data : {res.Data}");
+            customer = res.Data;
+        }
+        else
+        {
+            Console.WriteLine($"error : {res.RespText}");
+        }
+    }
+
+    private async Task UpdateCustomer()
+    {
+        var updateResponse = await Service.UpdateCustomer(customer);
+
+        if (updateResponse)
+        {
+            // Customer updated successfully, navigate to customer list or details page
+            Navigation.NavigateTo("/customerlist");
+        }
+        else
+        {
+            // Handle error, e.g., display an error message
+        }
+    }
+
+}

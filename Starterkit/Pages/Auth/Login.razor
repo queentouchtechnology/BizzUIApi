@@ -1,0 +1,126 @@
+﻿@page "/login"
+@inject AuthService AuthService
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@using Starterkit.Components;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationService authenticationStateProvider;
+
+
+<h3>Login</h3>
+
+<div>
+    <label for="username">Username:</label>
+    <input type="text" id="username" @bind="username" />
+</div>
+
+<div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" @bind="password" />
+</div>
+
+<button @onclick="CheckUserInfo">Login</button>
+
+<AlertBox Message="@alertMessage" Type="@alertType" OnClose="ClearErrorMessage" />
+
+@if (alertMessage != null)
+{
+    <p>@alertMessage</p>
+}
+<p>@alertMessage</p>
+
+@code {
+    private string username;
+    private string password;
+    private string? alertMessage;
+    private string? alertType;
+    private SetMasterLoginModel setmasterresponse;
+
+    private AlertBox alertBox;
+    private bool added = false;    
+    private bool isSubmitting = false;
+
+
+
+    private void ClearErrorMessage()
+    {
+        alertMessage = null;
+    }
+    private async Task CheckUserInfo()
+    {
+        try
+        {
+            // Set the loading flag to true before starting the submission
+            isSubmitting = true;
+
+            // Simulating a delay for demonstration purposes
+            // await Task.Delay(500);
+
+
+            if (AuthService != null)
+            {
+                setmasterresponse = await AuthService.CheckUser(username, password);
+
+                if (setmasterresponse != null)
+                {
+                    alertMessage = setmasterresponse.Response;
+                    // Other processing
+                    Console.WriteLine($"Status : {alertMessage}");
+                    if (alertMessage == "OK")
+                    {
+                        Console.WriteLine($"Status : {setmasterresponse.Name}");
+
+                        authenticationStateProvider.SignInAsync(setmasterresponse.Name);
+                        
+                        NavigationManager.NavigateTo("/add-org");
+                        //alertBox.Type = "success";
+
+                        // Set the error message and type to display in the alert
+                        // alertBox.Message = "User Authenticated successfully!";
+
+                    }
+                    else
+                    {
+                        alertType = "danger";
+
+                        // Set the error message and type to display in the alert
+                        alertMessage = $"Error: {alertMessage}";
+                    }
+                    // Reset the loading flag after the submission is complete
+                    isSubmitting = false;
+
+                   
+                }
+                else
+                {
+                    
+                    alertMessage = "Response object is null";
+                    Console.WriteLine($"Status : {alertMessage}");
+                }
+            }
+            else
+            {
+                alertMessage = "AuthService is null";
+                Console.WriteLine($"Status : {alertMessage}");
+            }
+
+
+           
+            
+           
+        }
+        catch (Exception ex)
+        {
+
+           
+            // Set the alert type, e.g., "danger"
+            alertType = "danger";
+
+            // Set the error message and type to display in the alert
+            alertMessage = $"Error: {ex.Message}";
+
+            // Handle the exception (log, display an error message, etc.)
+            Console.WriteLine($"Error loading page: {ex.Message}");
+        }
+    }
+}

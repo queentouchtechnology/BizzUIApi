@@ -1,0 +1,23 @@
+﻿@page "/account/login"
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@using Starterkit.Components;
+@inject NavigationManager NavigationManager;
+
+@inject AuthenticationService AuthService
+@using Microsoft.AspNetCore.Components.Authorization
+
+<h3>Login</h3>
+<input type="text" @bind=username></input>
+<button @onclick="LoginCall">Login</button>
+
+@code {
+    public string username = string.Empty;
+    private async Task LoginCall()
+    {
+        Console.WriteLine("--------------------------Login user1....");
+        await AuthService.SignInCustomAsync(username);
+        Console.WriteLine("--------------------------Login END....");
+        NavigationManager.NavigateTo("/account/profile");
+    }
+}

@@ -1,0 +1,100 @@
+﻿<!-- ProductForm.razor -->
+@page "/productform"
+@using System.Text
+@inject HttpClient httpClient
+
+<h3>Product Form</h3>
+
+<EditForm Model="@product" OnValidSubmit="@HandleValidSubmit" FormName="productForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="productId">Product Id</label>
+        <InputNumber id="productId" class="form-control" @bind-Value="product.Id" readonly />
+    </div>
+
+
+    <div class="form-group">
+        <label for="productName">Product Name</label>
+        <InputText id="productName" class="form-control" @bind-Value="product.Name" />
+    </div>
+
+    <div class="form-group">
+        <label for="productPrice">Product Price</label>
+        <InputNumber id="productPrice" class="form-control" @bind-Value="product.Price" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<button class="btn btn-primary" @onclick="HandleButtonClick">Click me</button>
+
+<p>@message</p>
+
+
+
+@code {
+    private ProductModel product = new ProductModel();
+    private const string endpoint = "https://bizzuiapi.queentouchtech.in/api/products/";
+
+    private string message = "Click the button to see a message.";
+
+    private void HandleButtonClick()
+    {
+        Console.WriteLine("Processing..");
+        message = "Button clicked!";
+    }
+
+    private bool isDataSent = false;
+
+    private void HandleValidSubmit()
+    {
+        // Handle form submission logic here
+        isDataSent = true;
+    }
+
+    private async Task SubmitForm()
+    {
+        Console.WriteLine("Before API call");
+        var response = await httpClient.PostAsJsonAsync(endpoint, product);
+
+        // Serialize form data to JSON
+        var jsonFormData = System.Text.Json.JsonSerializer.Serialize(product);
+
+        // Prepare the JSON data to be sent
+        var content = new StringContent(jsonFormData, Encoding.UTF8, "application/json");
+
+
+        try
+        {
+            Console.WriteLine("After API call, before reading response");
+            var responseData = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("After reading response");
+            Console.WriteLine(responseData.ToString());
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"HTTP request failed: {ex.Message}");
+        }
+
+        // Ensure the component re-renders after the API call
+        StateHasChanged();
+    }
+
+    // Define your ProductModel class
+    public class ProductModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    // Define your ApiResponseModel class
+    public class ApiResponseModel
+    {
+        public bool status { get; set; }
+        public string respText { get; set; }
+        // You can extend this model to include additional properties based on your API response
+    }
+}

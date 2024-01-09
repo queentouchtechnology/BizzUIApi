@@ -1,0 +1,91 @@
+﻿<!-- CustomerList.razor -->
+
+@page "/customerlist"
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@using Starterkit.Components;
+@inject CustomersService Service
+@inject IJSRuntime JSRuntime
+
+<Table pagedCustomers="@pagedCustomers" ShowConfirmationModal="@ShowConfirmation" />
+<Pagination currentPage="@currentPage" totalPages="@totalPages" PageChanged="@LoadPage"/>
+<ModalComponent CustomerId="@customerid" @ref="confirmModal" Message="Are you sure?" OnConfirmation="HandleConfirmation" />
+
+
+
+
+
+
+@code {
+    private CustomerResponse<Customer> pagedCustomers;
+    private int pageSize = 2; // Set your desired page size
+    private int totalItems;
+    private int customerid;
+    private int currentPage = 1;
+    private int totalPages => (int)Math.Ceiling((double)totalItems / pageSize);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPage(currentPage);
+        Console.WriteLine($"currentPage-{currentPage}");
+        Console.WriteLine($"totalPages-{totalPages}");
+    }
+
+    private async Task LoadPage(int page)
+    {
+        try
+        {
+            int offset = (page - 1) * pageSize;
+            pagedCustomers = await Service.GetList(offset, pageSize);
+
+            currentPage = page;
+            totalItems = pagedCustomers.Count;
+
+            Console.WriteLine($"Status : {pagedCustomers.Status}");
+            Console.WriteLine($"TotalCount : {pagedCustomers.Count}");
+            Console.WriteLine($"Status : {pagedCustomers.Data.Count}");
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception (log, display an error message, etc.)
+            Console.WriteLine($"Error loading page: {ex.Message}");
+        }
+    }
+
+
+    private bool showModal = false;
+    private ModalComponent confirmModal;
+
+    private async Task ShowConfirmation(int DeleteCustomerID)
+    {
+        customerid = DeleteCustomerID;
+        await JSRuntime.InvokeVoidAsync("metronicShowModal", "kt_modal_confirmation_comp");
+        Console.WriteLine($"Modal show clicked......Customer ID .{DeleteCustomerID}");
+       
+        
+    }
+
+   
+
+    private async Task HandleConfirmation(bool result)
+    {
+        if (result)
+        {
+            // User clicked "Yes" in the confirmation modal
+            // Perform your action here
+            // For example, delete a record, submit a form, etc.
+            // ...
+            Console.WriteLine("User confirmed");
+            await JSRuntime.InvokeVoidAsync("metronicCloseModal", "kt_modal_confirmation_comp");
+        }
+        else
+        {
+            
+            // User clicked "No" or closed the confirmation modal
+            Console.WriteLine("User canceled");
+            await JSRuntime.InvokeVoidAsync("metronicCloseModal", "kt_modal_confirmation_comp");
+        }
+    }
+  
+
+}

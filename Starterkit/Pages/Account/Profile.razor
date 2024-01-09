@@ -1,0 +1,48 @@
+﻿<!-- Profile.razor -->
+@page "/account/profile"
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@using Starterkit.Components
+@inject NavigationManager NavigationManager;
+@inject AuthenticationService AuthService
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using System.Text.Json.Serialization
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<h3>Profile</h3>
+
+<p>Welcome, @((CurrentUser != null && CurrentUser.UserName != null) ? CurrentUser.UserName : "Guest")!</p>
+
+
+<button @onclick="Logout">Logout</button>
+
+@code {
+    private ClaimUser CurrentUser;
+    
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Retrieve the current user using AuthenticationServiceTwo
+            CurrentUser = await AuthService.GetCurrentUserAsync();           
+            Console.WriteLine($"----------->{CurrentUser.UserName}");
+            StateHasChanged();
+        }
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+       
+    }
+
+    private async Task Logout()
+    {
+        // Perform logout logic, e.g., calling AuthService.SignOutAsync()
+        await AuthService.SignOutAsync();
+
+        // Redirect to the login page after logout
+        NavigationManager.NavigateTo("/account/login");
+    }
+}

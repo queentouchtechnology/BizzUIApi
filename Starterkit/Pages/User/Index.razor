@@ -1,0 +1,87 @@
+﻿@page "/add-user"
+
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+@using Starterkit.Components;
+@inject UserService Service
+@inject NavigationManager NavigationManager;
+
+
+
+
+<AlertBox Message="@alertMessage" Type="@alertType" OnClose="ClearErrorMessage" />
+<Form isdatasubmit="@isSubmitting" OnValidSubmit="@Create"></Form>
+<Table obj="@objlist" />
+
+@code {
+    private AlertBox alertBox;
+
+    private User newobj = new User();
+
+    private List<User> objlist = new List<User>();
+
+
+    private bool added = false;
+    private string ?alertMessage;
+    private string ?alertType;
+    private bool isSubmitting = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        objlist = await Service.ListAllAsync();
+
+    }
+
+    private void ClearErrorMessage()
+    {
+        alertMessage = null;
+    }
+
+    private async Task Create(User newobj)
+    {
+        try
+        {
+            // Set the loading flag to true before starting the submission
+            isSubmitting = true;
+
+            // Simulating a delay for demonstration purposes
+            //await Task.Delay(500);
+            var response = await Service.Create(newobj);
+            added = response.Status;
+            alertMessage = response.RespText;
+
+            if (alertMessage == "OK")
+            {
+                alertType = "success";
+                // Set the error message and type to display in the alert
+                alertMessage = "User created successfully!";
+                //organizations = await Service.GetOrganizationsAsync();
+            }
+            else
+            {
+                // Set the alert type, e.g., "danger"
+                alertType = "danger";
+                // Set the error message and type to display in the alert
+                alertMessage = $"Error: {alertMessage}";
+            
+            }
+            // Reset the loading flag after the submission is complete
+            isSubmitting = false;
+
+            Console.WriteLine($"Status : {alertMessage}");
+        }
+        catch (Exception ex)
+        {
+
+           
+            // Set the alert type, e.g., "danger"
+            alertType = "danger";
+            // Set the error message and type to display in the alert
+            alertMessage = $"Error: {ex.Message}";
+
+            // Handle the exception (log, display an error message, etc.)
+            Console.WriteLine($"Error loading page: {ex.Message}");
+        }
+    }
+}

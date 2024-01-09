@@ -1,0 +1,127 @@
+﻿@inherits ComponentBase
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+
+<h3>User Form</h3>
+
+
+
+<EditForm Model="@user" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <InputText id="Name" @bind-Value="user.Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Email:</label>
+        <InputText id="Email" @bind-Value="user.Email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Password:</label>
+        <InputText id="Password" @bind-Value="user.Password" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="OrgId">Organization ID:</label>
+        <InputNumber id="OrgId" @bind-Value="user.OrgId" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Role">Role:</label>
+        <InputText id="Role" @bind-Value="user.Role" class="form-control" />
+    </div>
+
+  
+
+    <div class="form-group">
+        <label for="IsActive">Is Active:</label>
+        <InputCheckbox id="IsActive" @bind-Value="user.IsActive" class="form-check-input" />
+    </div>
+
+    <div class="form-group">
+        <label for="Mobile">Mobile:</label>
+        <InputText id="Mobile" @bind-Value="user.Mobile" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Address">Address:</label>
+        <InputText id="Address" @bind-Value="user.Address" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Code">Code:</label>
+        <InputText id="Code" @bind-Value="user.Code" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="ReportToId">Report To ID:</label>
+        <InputNumber id="ReportToId" @bind-Value="user.ReportToId" class="form-control" />
+    </div>
+
+
+
+    <div class="form-group">
+        <label for="UserImageUrl">User Image URL:</label>
+        <InputText id="UserImageUrl" @bind-Value="user.UserImageUrl" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="DashboardUrl">Dashboard URL:</label>
+        <InputText id="DashboardUrl" @bind-Value="user.DashboardUrl" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Website">Website:</label>
+        <InputText id="Website" @bind-Value="user.Website" class="form-control" />
+    </div>
+
+   <div class="d-flex justify-content-end">
+        <!--begin::Button-->
+        <a href="" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
+        <!--end::Button-->
+        <!--begin::Button-->
+        <button type="submit" disabled="@isdatasubmit" id="kt_ecommerce_add_product_submit" class="btn btn-primary">
+
+
+            @if (isdatasubmit)
+            {
+                <span class="indicator-label">
+                    Please wait...
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                </span>
+
+            }
+            else
+            {
+                <span class="indicator-label">Create</span>
+            }
+
+
+
+
+        </button>
+        <!--end::Button-->
+    </div>
+</EditForm>
+
+
+
+@code {
+    [Parameter]
+    public EventCallback<User> OnValidSubmit { get; set; }
+
+    [Parameter]
+    public bool isdatasubmit { get; set; }
+
+    private User user = new User();
+
+
+    private void HandleValidSubmit()
+    {
+        OnValidSubmit.InvokeAsync(user);
+    }
+}

@@ -1,0 +1,124 @@
+﻿@page "/createproduct"
+
+@using System.Text
+@inject HttpClient httpClient
+@inject ProductService productService
+
+@using Bizz.Entities.Models;
+@using Bizz.DataService.Services;
+
+
+
+
+
+
+<EditForm class="form w-100" Model="@newProduct" OnValidSubmit="@SubmitForm">
+
+    <div class="text-center mb-11">
+        <!--begin::Title-->
+        <h1 class="text-dark fw-bolder mb-3">
+            Create New Product
+        </h1>
+        <!--end::Title-->
+        <!--begin::Subtitle-->
+        <div class="text-gray-500 fw-semibold fs-6">
+            New Product Information here
+        </div>
+        <!--end::Subtitle--->
+    </div>
+
+    <!--begin::Separator-->
+    <div class="separator separator-content my-14"><span class="w-125px text-gray-500 fw-semibold fs-7">Test Purpose only</span></div>
+    <!--end::Separator-->
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="fv-row mb-8">
+        <InputText id="name" @bind-Value="newProduct.Name" placeholder="Product name" class="form-control" />
+    </div>
+
+    <div class="fv-row mb-8">
+        <InputNumber id="price" placeholder="Product Price" @bind-Value="newProduct.Price" class="form-control" />
+    </div>
+
+
+    <div class="d-grid mb-10">
+        <button type="submit" id="kt_sign_up_submit" class="btn btn-primary">
+
+            @if (isLoading)
+            {
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span>Loading...</span>
+            }
+            else
+            {
+                <span>Create Product</span>
+
+            }
+        </button>
+    </div>
+
+
+    
+</EditForm>
+
+<div class="@alertClass" role="alert">
+    @alertMessage
+</div>
+
+
+@code {
+    private string alertClass = "";
+    private string alertMessage = "";
+    private bool isLoading = false;
+
+
+    private Product newProduct = new Product();
+
+    private async Task SubmitForm()
+    {
+        try
+        {
+            // Set loading state
+            isLoading = true;
+
+            var response = await productService.AddProduct(newProduct);
+            
+            // Check the response and handle accordingly
+            if (response.Status)
+            {
+                // Successful API call
+                Console.WriteLine("Product created successfully!");
+                alertClass = "alert alert-success";
+                alertMessage = "Product created successfully!";
+
+            }
+            else
+            {
+                // Handle error
+                Console.WriteLine($"Error: {response.Status}");
+                alertClass = "alert alert-danger";
+                alertMessage = $"Error: {response.Status}";
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            // Handle HTTP request exceptions
+            alertClass = "alert alert-danger";
+            alertMessage = $"HTTP request failed: {ex.Message}";
+        }
+        catch (Exception ex)
+        {
+            // Handle other exceptions
+            alertClass = "alert alert-danger";
+            alertMessage = $"An error occurred: {ex.Message}";
+        }
+
+        finally
+        {
+            // Reset loading state
+            isLoading = false;
+        }
+    }
+}

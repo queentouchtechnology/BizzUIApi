@@ -1,0 +1,17 @@
+﻿@page "/tablepage"
+@using Starterkit.Components;
+
+<h3>TablePage</h3>
+
+<TableComponent Data="@myData" />
+
+
+@code {
+    // Data to be passed to the TableComponent
+    private List<TableComponent.MyDataModel> myData = new List<TableComponent.MyDataModel>
+    {
+        new TableComponent.MyDataModel { Column1 = "Value1", Column2 = "Value2" },
+        new TableComponent.MyDataModel { Column1 = "Value3", Column2 = "Value4" },
+        // Add more data as needed
+    };
+}

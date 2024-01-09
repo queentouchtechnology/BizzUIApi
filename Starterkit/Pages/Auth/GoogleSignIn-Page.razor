@@ -1,0 +1,14 @@
+﻿@page "/Google-signin-page"
+@inject NavigationManager NavigationManager
+
+
+<h3>Sign In</h3>
+
+<button @onclick="LoginWithGoogle">Sign In with Google</button>
+
+@code {
+    private async Task LoginWithGoogle()
+    {
+        NavigationManager.NavigateTo("/login-google");
+    }
+}
